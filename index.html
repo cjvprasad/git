@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro Git Book - PDF Preview</title>
+    <style>
+        /* --- CSS Variables (Dark Mode Default) --- */
+        :root {
+            --primary-color: #f4511e; /* Git Orange */
+            --secondary-color: #1e1e1e; /* Sidebar Dark */
+            --text-color: #e0e0e0;
+            --link-color: #e0e0e0;
+            --link-hover: #f4511e;
+            --active-bg: rgba(244, 81, 30, 0.2);
+            --border-color: #333;
+        }
+
+        /* --- Light Theme Overrides --- */
+        body.light-theme {
+            --primary-color: #f05032;
+            --secondary-color: #f8f9fa;
+            --text-color: #333;
+            --link-color: #333;
+            --link-hover: #d63384;
+            --active-bg: #ffe0b2;
+            --border-color: #ddd;
+        }
+
+        /* --- Layout --- */
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden; /* Prevent body scroll, let iframe scroll */
+        }
+
+        /* --- Sidebar --- */
+        .sidebar {
+            width: 260px;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0; /* Prevent shrinking */
+            transition: background-color 0.3s;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar h3 {
+            margin: 0;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+
+        .nav-items {
+            overflow-y: auto;
+            flex-grow: 1;
+            padding: 10px 0;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 12px 20px;
+            color: var(--link-color);
+            text-decoration: none;
+            font-size: 14px;
+            border-left: 4px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--link-hover);
+        }
+
+        .nav-link.active {
+            background-color: var(--active-bg);
+            border-left-color: var(--primary-color);
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        /* --- Main PDF Area --- */
+        .main-content {
+            flex-grow: 1;
+            background-color: #525659; /* Standard PDF Viewer grey */
+            display: flex;
+            flex-direction: column;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* --- Theme Toggle --- */
+        .theme-toggle-container {
+            padding: 15px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .theme-toggle {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            width: 100%;
+        }
+        .theme-toggle:hover { opacity: 0.9; }
+
+        @media (max-width: 768px) {
+            .sidebar { display: none; } /* Hide sidebar on mobile for full PDF view */
+        }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="sidebar-header">
+        <h3>Pro Git Navigator</h3>
+    </div>
+    <div class="nav-items">
+        <a class="nav-link active" onclick="jumpToPage(1, this)">Cover</a>
+        <a class="nav-link" onclick="jumpToPage(10, this)">1. Getting Started</a>
+        <a class="nav-link" onclick="jumpToPage(26, this)">2. Git Basics</a>
+        <a class="nav-link" onclick="jumpToPage(63, this)">3. Git Branching</a>
+        <a class="nav-link" onclick="jumpToPage(105, this)">4. Git on the Server</a>
+        <a class="nav-link" onclick="jumpToPage(135, this)">5. Distributed Git</a>
+        <a class="nav-link" onclick="jumpToPage(169, this)">6. GitHub</a>
+        <a class="nav-link" onclick="jumpToPage(205, this)">7. Git Tools</a>
+        <a class="nav-link" onclick="jumpToPage(365, this)">8. Customizing Git</a>
+        <a class="nav-link" onclick="jumpToPage(395, this)">9. Git Internals</a>
+    </div>
+    <div class="theme-toggle-container">
+        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">☀ Light Mode</button>
+    </div>
+</div>
+
+<div class="main-content">
+    <iframe id="pdfViewer" src="progit.pdf#page=1&zoom=page-fit" title="PDF Viewer"></iframe>
+</div>
+
+<script>
+    function jumpToPage(pageNumber, element) {
+        const viewer = document.getElementById('pdfViewer');
+        // Updates the source to jump to the specific page
+        viewer.src = `progit.pdf#page=${pageNumber}&zoom=page-fit`;
+        
+        // Update active class on sidebar
+        document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+        if(element) element.classList.add('active');
+    }
+
+    function toggleTheme() {
+        const body = document.body;
+        const button = document.getElementById('themeToggle');
+        
+        body.classList.toggle('light-theme');
+        
+        if (body.classList.contains('light-theme')) {
+            button.innerText = '☾ Dark Mode';
+        } else {
+            button.innerText = '☀ Light Mode';
+        }
+    }
+</script>
+
+</body>
+</html>
